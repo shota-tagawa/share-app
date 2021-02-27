@@ -26,4 +26,4 @@ yarn-error.log*
 firebase.ts
 .firebaserc
 firebase.json
-.firebase
+/.firebase
