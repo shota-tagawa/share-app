@@ -22,9 +22,6 @@ const Front = () => {
 
   return (
     <>
-      <h1 className={styles.heading}>
-        <span>Test App</span>
-      </h1>
       <div className={styles.grid}>
         <div className={styles.col}>
           <SignUp />
