@@ -1,0 +1,47 @@
+@import "./mixin";
+@import "./function";
+
+.heading {
+  font-size: 28px;
+  font-family: "Roboto", "sans-serif";
+  text-transform: uppercase;
+  margin-bottom: 24px;
+  @include media(md) {
+    font-size: 32px;
+    margin-bottom: 32px;
+  }
+  @include media(lg) {
+    font-size: 48px;
+    margin-bottom: 48px;
+  }
+}
+
+.userHeading {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 16px;
+}
+
+.signIn {
+  @include media(md) {
+    padding: 16px;
+  }
+}
+
+.grid {
+  @include media(md) {
+    display: flex;
+  }
+}
+
+.col {
+  @include media(sm) {
+    margin-bottom: 32px;
+  }
+  @include media(md) {
+    margin-right: 32px;
+  }
+  @include media(lg) {
+    margin-right: 60px;
+  }
+}

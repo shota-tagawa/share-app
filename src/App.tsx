@@ -1,24 +1,49 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect } from 'react';
+import styles from './assets/common.module.scss';
+import { Footer, Header } from './components';
+import { Home, SignIn, SignUp } from './templates';
+import { auth } from './firebase';
+import { useDispatch, useSelector } from 'react-redux';
+import { signIn, signOut } from './store/user';
+import { RootState } from './store';
+import { db } from './firebase';
+import Router from './Router';
+import './assets/base.scss';
 
 function App() {
+  const dispatch = useDispatch();
+  const isSignIn = useSelector((state: RootState) => state.user.isSignIn);
+
+  useEffect(() => {
+    if (!isSignIn) {
+
+      auth.onAuthStateChanged((snapshot) => {
+        if (snapshot) {
+          (async () => {
+            const doc = await db.collection('users').doc(snapshot.uid).get();
+            const docData = doc.data();
+            if (docData) {
+              dispatch(signIn({
+                uid: snapshot.uid,
+                selfIntroduction: docData.selfIntroduction,
+                displayName: docData.displayName,
+                photoURL: docData.photoURL
+              }));
+            }
+          })();
+        }
+      });
+
+    }
+  }, []);
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <Header />
+      <div className={styles.globalContainer}>
+        <Router />
+      </div>
+      {isSignIn && (<Footer />)}
     </div>
   );
 }

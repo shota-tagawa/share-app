@@ -1,0 +1,46 @@
+@import "./mixin";
+@import "./function";
+
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  margin: 0 auto vw(-8);
+  @include media(xs) {
+    margin-bottom: vw(-8, 320);
+  }
+  @include media(md) {
+    max-width: 632px;
+    margin-bottom: -16px;
+  }
+  &::after {
+    content: "";
+    display: block;
+    width: vw(109);
+    @include media(xs) {
+      width: vw(90.66, 320);
+    }
+    @include media(md) {
+      width: 200px;
+    }
+  }
+}
+.col {
+  width: vw(109);
+  height: vw(109);
+  object-fit: cover;
+  object-position: center;
+  margin-bottom: vw(8);
+  cursor: pointer;
+  @include media(xs) {
+    width: vw(90.66, 320);
+    height: vw(90.66, 320);
+    margin-bottom: vw(8, 320);
+  }
+  @include media(md) {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 16px;
+  }
+}
