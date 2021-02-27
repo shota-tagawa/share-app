@@ -15,26 +15,18 @@ function App() {
   const isSignIn = useSelector((state: RootState) => state.user.isSignIn);
 
   useEffect(() => {
-    if (!isSignIn) {
-
-      auth.onAuthStateChanged((snapshot) => {
-        if (snapshot) {
-          (async () => {
-            const doc = await db.collection('users').doc(snapshot.uid).get();
-            const docData = doc.data();
-            if (docData) {
-              dispatch(signIn({
-                uid: snapshot.uid,
-                selfIntroduction: docData.selfIntroduction,
-                displayName: docData.displayName,
-                photoURL: docData.photoURL
-              }));
-            }
-          })();
-        }
-      });
-
-    }
+    isSignIn || auth.onAuthStateChanged(async (snapshot) => {
+      if (snapshot) {
+        const doc = await db.collection('users').doc(snapshot.uid).get();
+        const docData = doc.data();
+        docData && dispatch(signIn({
+          uid: snapshot.uid,
+          selfIntroduction: docData.selfIntroduction,
+          displayName: docData.displayName,
+          photoURL: docData.photoURL
+        }));
+      }
+    });
   }, []);
 
   return (
