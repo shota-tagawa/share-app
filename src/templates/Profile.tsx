@@ -1,15 +1,14 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { UserHeader } from '../components';
+import { firebaseUserProfile } from '../interface';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
-import styles from '../assets/common.module.scss';
 import { makeStyles } from '@material-ui/core/styles';
-import Avatar from '@material-ui/core/Avatar';
 import { RootState } from '../store';
 import { push } from 'connected-react-router';
 import { db } from '../firebase';
 import { ImageGrid, TabBar } from './../components/';
-
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -23,7 +22,7 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('md')]: {
       marginTop: 32,
     }
-  }
+  },
 }));
 
 const Profile = (props: any) => {
@@ -37,7 +36,7 @@ const Profile = (props: any) => {
   useEffect(() => {
     (async () => {
       const user = await db.collection('users').doc(params.id).get();
-      const userDataRef = user.data();
+      const userDataRef = user.data() as firebaseUserProfile;
       userDataRef && setUserData(userDataRef);
     })();
 
@@ -59,9 +58,10 @@ const Profile = (props: any) => {
       <div style={{ marginBottom: 16 }}>
         {userData && (
           <>
-            <div className={styles.info}>
-              <Avatar className={classes.avatar} src={userData.photoURL} />
-              <h1 className={styles.displayName}>{userData.displayName}</h1>
+            <UserHeader
+              src={userData.photoURL}
+              name={userData.displayName}
+            >
               {(userData.uid == uid) && (
                 <IconButton
                   style={{ marginLeft: 16 }}
@@ -70,11 +70,8 @@ const Profile = (props: any) => {
                   <EditIcon />
                 </IconButton>
               )}
-            </div>
+            </UserHeader>
             <p>{userData.selfIntroduction}</p>
-            <div className={classes.tabBar}>
-              <TabBar />
-            </div>
           </>
         )}
       </div>

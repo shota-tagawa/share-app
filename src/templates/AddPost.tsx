@@ -4,8 +4,7 @@ import { push } from 'connected-react-router';
 import { db, storage } from '../firebase';
 import { RootState } from '../store';
 import styles from '../assets/common.module.scss';
-import { UploadButton,Button } from '../components';
-// import Button from '@material-ui/core/Button';
+import { UploadButton, Button, Pic } from '../components';
 import TextField from '@material-ui/core/TextField';
 import AddPhoteIcon from '@material-ui/icons/AddAPhoto';
 import IconButton from '@material-ui/core/IconButton';
@@ -62,7 +61,7 @@ const AddPost = () => {
       <h2 className={styles.heading}>新規投稿</h2>
       <div>
         {image && (
-          <div className={styles.pic} style={{ backgroundImage: `url(${thumbnail})` }} />
+          <Pic src={thumbnail} />
         )}
         <div className={styles.formItem}>
           <UploadButton onChange={(e) => inputImage(e)} />
