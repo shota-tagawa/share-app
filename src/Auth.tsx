@@ -1,9 +1,6 @@
 import React, { useEffect } from 'react';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from './store';
-import { authSignIn, authSignOut } from './store/user';
-import { auth } from './firebase';
-import { signIn, signOut } from './store/user';
 
 
 type AuthProps = {
