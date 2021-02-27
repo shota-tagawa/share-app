@@ -2,7 +2,11 @@
 react-reduxとfirebaseの練習のために作成したアプリです。
 
 ## 使用技術など
-- react
-- redux
-- firebase
-- material-ui
+- TypeScript
+- React
+- Redux
+- Firebase
+- Material-ui
+
+## デモ
+https://share-app-293d8.web.app
