@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { ImageGrid } from './../components/';
-import { useSelector, useDispatch } from 'react-redux';
 import { db } from '../firebase';
-import { RootState } from '../store';
 
 
 
