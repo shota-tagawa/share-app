@@ -4,3 +4,12 @@ export interface firebaseUserProfile {
   photoURL: string,
   selfIntroduction: string
 }
+
+export interface firebasePost {
+  description: string,
+  id: string,
+  poster: string,
+  timestamp: number,
+  url: string
+  likeUsers: string[]
+}

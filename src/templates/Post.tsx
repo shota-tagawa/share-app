@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from 'react';
+import { RouteComponentProps } from 'react-router-dom'
 import { useDispatch } from 'react-redux';
-import { firebaseUserProfile } from '../interface';
+import { firebaseUserProfile, firebasePost } from '../interface';
 import { push } from 'connected-react-router';
 import { db } from '../firebase';
-import styles from '../assets/common.module.scss';
-import Avatar from '@material-ui/core/Avatar';
-import { makeStyles } from '@material-ui/core/styles';
 import dayjs from 'dayjs';
-import { Pic, UserHeader } from '../components';
+import { Pic, UserHeader, PostMenu } from '../components';
+import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -24,8 +23,10 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-const Post = (props: any) => {
-  const [postData, setPostData] = useState<any>();
+type PostProps = {} & RouteComponentProps<{ id: string }>;
+
+const Post = (props: PostProps) => {
+  const [postData, setPostData] = useState<firebasePost>();
   const [poster, setPoster] = useState<firebaseUserProfile>();
   const [time, setTime] = useState('');
   const classes = useStyles();
@@ -35,7 +36,7 @@ const Post = (props: any) => {
 
     (async () => {
       const post = await db.collection('posts').doc(props.match.params.id).get();
-      const postDataRef = post.data();
+      const postDataRef = post.data() as firebasePost;
       if (postDataRef) {
         const doc = await db.collection('users').doc(postDataRef.poster).get();
         const docData = doc.data() as firebaseUserProfile;
@@ -43,8 +44,7 @@ const Post = (props: any) => {
         const date = new Date(postDataRef.timestamp * 1000);
         setTime(dayjs(date).format('M月d日'));
       }
-      setPostData(post.data());
-
+      setPostData(postDataRef);
     })();
 
   }, [])
@@ -61,7 +61,8 @@ const Post = (props: any) => {
             />
           }
           <Pic src={postData.url} />
-          <div style={{ marginTop: 16 }}>
+          <div style={{ marginTop: 8 }}>
+            <PostMenu id={props.match.params.id} />
             <p className={classes.date}>{time}</p>
             <p>{postData.description}</p>
           </div>
