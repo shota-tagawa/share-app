@@ -36,43 +36,39 @@ const PostMenu = (props: PostMenuProps) => {
   const classes = useStyles();
   const [isLike, setIsLike] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(0);
+  const [open, setOpen] = useState<boolean>();
 
   const like = async () => {
-    const postRef = await db.collection('posts').doc(id);
-    const docSnap = await postRef.get()
-    const docData = docSnap.data() as firebasePost;
+    const postRef = db.collection('posts').doc(id);
+    const docRef = await postRef.get();
+    const docData = docRef.data() as firebasePost;
     const likeUsers = docData.likeUsers;
-
-    // likeUsersに自分のidがあるかどうかチェック
     if (!likeUsers.includes(id)) {
-      setIsLike(true);
       await postRef.set({
         likeUsers: [
           ...likeUsers,
           id
         ]
       }, { merge: true });
-      setLikeCount(likeUsers.length + 1);
     } else {
-      setIsLike(false);
       const newLikeUsers = likeUsers.filter((likeUser) => likeUser !== id)
       await postRef.set({
         likeUsers: newLikeUsers
       }, { merge: true });
-      setLikeCount(likeUsers.length - 1);
     }
   }
-
+  
   useEffect(() => {
-    (async () => {
-      const docSnap = await db.collection('posts').doc(id).get()
-      const docData = docSnap.data() as firebasePost;
-      const likeUsers = docData.likeUsers;
-      setLikeCount(likeUsers.length);
-      if (likeUsers.includes(id)) {
+    const unsubscribe = db.collection('posts').doc(id).onSnapshot(snapshot => {
+      const snapshotData = snapshot.data() as firebasePost;
+      setLikeCount(snapshotData.likeUsers.length);
+      if (snapshotData.likeUsers.includes(id)) {
         setIsLike(true);
+      } else {
+        setIsLike(false);
       }
-    })();
+    })
+    return () => unsubscribe();
   }, [])
 
 
