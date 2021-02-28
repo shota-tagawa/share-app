@@ -12,4 +12,19 @@ export interface firebasePost {
   timestamp: number,
   url: string
   likeUsers: string[]
+  comments: [
+    {
+      uid: string,
+      displayName: string,
+      content: string,
+      photoURL: string,
+    }
+  ]
+}
+
+export interface firebasePostComment {
+  uid: string,
+  displayName: string,
+  content: string,
+  photoURL: string,
 }

@@ -6,52 +6,54 @@ import Fade from '@material-ui/core/Fade';
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
+    root: {
+
+    },
     modal: {
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
     },
     paper: {
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
       backgroundColor: theme.palette.background.paper,
       border: '2px solid #000',
       boxShadow: theme.shadows[5],
-      padding: theme.spacing(2, 4, 3),
+      padding: '16px 16px 16px 16px',
+      width: '100%',
+      maxWidth: '85%',
+      height: '100%',
+      maxHeight: '80%',
+      position: 'relative',
+      [theme.breakpoints.up('md')]: {
+        maxWidth: 600,
+      }
     },
   }),
 );
 
 interface ModalProps {
   open: boolean,
-  className?: string
+  className?: string,
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>,
+  children?: React.ReactNode
+
 }
 
 const Modal = (props: ModalProps) => {
   const classes = useStyles();
-  const [open, setOpen] = React.useState(false);
-
-  const handleOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    setOpen(false);
-  };
-
-  const toggleHandle = () => {
-
-  }
+  const { open, className, setOpen, children } = props;
 
   return (
     <div className={props.className}>
-      <button type="button" onClick={handleOpen}>
-        react-transition-group
-      </button>
       <MaterialModal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
         className={classes.modal}
         open={open}
-        onClose={handleClose}
+        onClose={() => setOpen(false)}
         closeAfterTransition
         BackdropComponent={Backdrop}
         BackdropProps={{
@@ -60,8 +62,7 @@ const Modal = (props: ModalProps) => {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id="transition-modal-title">Transition modal</h2>
-            <p id="transition-modal-description">react-transition-group animates me.</p>
+            {children}
           </div>
         </Fade>
       </MaterialModal>

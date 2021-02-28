@@ -12,7 +12,7 @@ import IconButton from '@material-ui/core/IconButton';
 const AddPost = () => {
   const dispatch = useDispatch();
   const uid = useSelector((state: RootState) => state.user.uid);
-
+  const [sending, setSending] = useState<boolean>(false);
   const [image, setImage] = useState<any>();
   const [thumbnail, setThumbnail] = useState<any>();
   const [description, setDiscription] = useState('');
@@ -32,9 +32,10 @@ const AddPost = () => {
   }
 
   const upload = async () => {
-    if (!image) {
+    if (!image || sending) {
       return;
     }
+    setSending(true);
     const str = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
     const strLength = 24;
     const id = Array.from(Array(strLength)).map(() => str[Math.floor(Math.random() * str.length)]).join('');
@@ -49,10 +50,13 @@ const AddPost = () => {
       description,
       timestamp,
       poster: uid,
-      likeUsers: []
+      likeUsers: [],
+      comments: []
     }).catch(() => {
       alert('画像のアップロードに失敗しました。')
-    });
+    }).finally(()=>{
+      setSending(false)
+    })
     dispatch(push('/home'));
   }
 
@@ -77,7 +81,10 @@ const AddPost = () => {
             fullWidth={true}
           />
         </div>
-        <Button onClick={upload} label="投稿する" />
+        <Button
+          onClick={upload}
+          label="投稿する"
+        />
       </div>
     </>
   );
