@@ -52,7 +52,7 @@ const Header = () => {
           <figure className={classes.logo}>
             <img onClick={() => { isSignIn && dispatch(push('/home')) }} src={logo}></img>
           </figure>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
+          <IconButton onClick={() => { dispatch(authSignOut()) }} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
             <MenuIcon />
           </IconButton>
         </Toolbar>
@@ -60,5 +60,6 @@ const Header = () => {
     </div>
   );
 }
+
 
 export default Header;

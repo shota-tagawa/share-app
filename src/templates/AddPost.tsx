@@ -49,6 +49,7 @@ const AddPost = () => {
       description,
       timestamp,
       poster: uid,
+      likeUsers: []
     }).catch(() => {
       alert('画像のアップロードに失敗しました。')
     });

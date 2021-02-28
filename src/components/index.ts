@@ -6,4 +6,5 @@ export { default as Pic } from './Pic';
 export { default as UserHeader } from './UserHeader';
 export { default as Button } from './Button';
 export { default as UploadButton } from './UploadButton';
+export { default as PostMenu } from './PostMenu';
 export { TabBar } from './TabBar/index';
