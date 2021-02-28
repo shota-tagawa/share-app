@@ -7,4 +7,7 @@ export { default as UserHeader } from './UserHeader';
 export { default as Button } from './Button';
 export { default as UploadButton } from './UploadButton';
 export { default as PostMenu } from './PostMenu';
+export { default as Modal } from './Modal';
+export { default as Comment } from './Comment';
+export { default as CommentForm } from './CommentForm';
 export { TabBar } from './TabBar/index';

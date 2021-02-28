@@ -42,7 +42,7 @@ const Post = (props: PostProps) => {
         const docData = doc.data() as firebaseUserProfile;
         setPoster(docData);
         const date = new Date(postDataRef.timestamp * 1000);
-        setTime(dayjs(date).format('M月d日'));
+        setTime(dayjs(date).format('M月D日'));
       }
       setPostData(postDataRef);
     })();

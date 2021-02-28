@@ -4,16 +4,21 @@ import MaterialButton from '@material-ui/core/Button';
 interface ButtonProps {
   onClick?: ((event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void) | undefined
   label: string
+  position?: 'center' | 'left' | 'right'
 }
 
 const Button = (props: ButtonProps) => {
+  const { label, position, onClick } = props;
+
   return (
-    <div>
+    <div style={{
+      textAlign: position || 'left'
+    }}>
       <MaterialButton
         variant="contained"
-        onClick={props.onClick}
+        onClick={onClick}
       >
-        {props.label}
+        {label}
       </MaterialButton>
     </div>
   )
