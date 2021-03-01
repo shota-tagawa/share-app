@@ -15,16 +15,14 @@ export interface firebasePost {
   comments: [
     {
       uid: string,
-      displayName: string,
       content: string,
-      photoURL: string,
     }
   ]
 }
 
 export interface firebasePostComment {
   uid: string,
-  displayName: string,
   content: string,
+  displayName: string,
   photoURL: string,
 }

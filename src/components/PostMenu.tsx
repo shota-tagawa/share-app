@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { firebasePost, firebasePostComment } from '../interface';
+import { firebasePost, firebasePostComment, firebaseUserProfile } from '../interface';
 import { db } from '../firebase';
 import { Modal } from '../components';
 import Box from '@material-ui/core/Box';
@@ -9,6 +9,7 @@ import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import { makeStyles } from '@material-ui/core/styles';
 import CommentForm from './CommentForm';
 import Comment from './Comment';
+import { firebaseConnect } from 'react-redux-firebase';
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -47,7 +48,8 @@ const PostMenu = (props: PostMenuProps) => {
   const classes = useStyles();
   const [isLike, setIsLike] = useState<boolean>(false);
   const [likeCount, setLikeCount] = useState<number>(0);
-  const [comments, setComments] = useState<firebasePostComment[]>();
+  const [commentCount, setCommentCount] = useState<number>(0);
+  const [comments, setComments] = useState<firebasePostComment[]>([]);
   const [open, setOpen] = useState<boolean>(false);
 
   const like = async () => {
@@ -71,10 +73,27 @@ const PostMenu = (props: PostMenuProps) => {
   }
 
   useEffect(() => {
+    (async () => {
+      const newComments: firebasePostComment[] = [];
+      const postRef = await db.collection('posts').doc(id).get();
+      const postData = postRef.data() as firebasePost;
+      postData.comments.forEach(async (comment) => {
+        const userRef = await db.collection('users').doc(comment.uid).get();
+        const userData = userRef.data() as firebaseUserProfile;
+        newComments.push({
+          uid: comment.uid,
+          content: comment.content,
+          displayName: userData.displayName,
+          photoURL: userData.photoURL,
+        })
+      })
+      setComments(newComments);
+    })();
+
     const unsubscribe = db.collection('posts').doc(id).onSnapshot(snapshot => {
       const snapshotData = snapshot.data() as firebasePost;
       setLikeCount(snapshotData.likeUsers.length);
-      setComments(snapshotData.comments);
+      setCommentCount(snapshotData.comments.length);
       if (snapshotData.likeUsers.includes(id)) {
         setIsLike(true);
       } else {
@@ -92,17 +111,17 @@ const PostMenu = (props: PostMenuProps) => {
         setOpen={setOpen}
       >
         <Box className={classes.commentWrapper}>
-          {comments && comments.map(comment => (
+          {comments && comments.map((comment, index) => (
             <Comment
+              key={index}
               content={comment.content}
               displayName={comment.displayName}
               src={comment.photoURL}
               uid={comment.uid}
-
             />
           ))}
         </Box>
-        <CommentForm id={id} />
+        <CommentForm id={id} comments={comments} setComments={setComments} />
       </Modal>
       <div>
         <IconButton
@@ -118,7 +137,7 @@ const PostMenu = (props: PostMenuProps) => {
         onClick={() => setOpen(!open)}
       >
         <ChatBubbleOutlineIcon />
-        <span className={classes.count}>{comments ? comments.length : 0}</span>
+        <span className={classes.count}>{commentCount}</span>
       </IconButton>
     </div>
   )
