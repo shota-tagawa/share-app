@@ -6,7 +6,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import { Button } from './';
 import { db } from '../firebase';
-import { firebasePost } from '../interface';
+import { firebasePost, firebasePostComment } from '../interface';
 
 const useStyles = makeStyles({
   root: {
@@ -14,16 +14,18 @@ const useStyles = makeStyles({
     margin: 'top auto 0',
     borderTop: '1px solid #ccc',
     flexShrink: 0,
-    paddingTop:8
+    paddingTop: 8
   }
 })
 
 interface CommentFormProps {
-  id: string
+  id: string,
+  comments: firebasePostComment[],
+  setComments: React.Dispatch<React.SetStateAction<firebasePostComment[]>>
 }
 
 const CommentForm = (props: CommentFormProps) => {
-  const { id } = props;
+  const { id, comments, setComments } = props;
   const [content, setContent] = useState<string>('');
   const [sending, setSinding] = useState<boolean>(false);
   const uid = useSelector((state: RootState) => state.user.uid);
@@ -41,19 +43,25 @@ const CommentForm = (props: CommentFormProps) => {
     const postRef = db.collection('posts').doc(id);
     const docRef = await postRef.get();
     const docData = docRef.data() as firebasePost;
+    const comment = {
+      uid,
+      content,
+    }
     await postRef.set({
       comments: [
         ...docData.comments,
-        {
-          uid,
-          displayName,
-          photoURL,
-          content
-        }
+        comment
       ]
     }, { merge: true })
     setSinding(false);
     setContent('');
+    const newComments = [...comments, {
+      ...comment,
+      displayName,
+      photoURL
+    }];
+    setComments(newComments);
+
   }
 
   return (
