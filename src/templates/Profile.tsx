@@ -8,7 +8,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import { RootState } from '../store';
 import { push } from 'connected-react-router';
 import { db } from '../firebase';
-import { ImageGrid, TabBar } from './../components/';
+import { ImageGrid, UserTabBar } from './../components/';
 
 const useStyles = makeStyles((theme) => ({
   avatar: {
@@ -72,6 +72,10 @@ const Profile = (props: any) => {
               )}
             </UserHeader>
             <p>{userData.selfIntroduction}</p>
+            <UserTabBar
+              uid={props.match.params.id}
+              postCount={postDatas.length}
+            />
           </>
         )}
       </div>

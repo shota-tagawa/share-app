@@ -52,6 +52,8 @@ export const authSignUp = (email: string, password: string) => {
         displayName: '',
         selfIntroduction: '',
         photoURL: '',
+        follow: [],
+        follower: [],
       })
       await dispatch(signIn({
         uid: snapshot.user.uid,
