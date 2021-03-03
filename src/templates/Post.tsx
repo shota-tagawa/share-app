@@ -1,20 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom'
-import { useDispatch } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { RootState } from '../store';
 import { firebaseUserProfile, firebasePost } from '../interface';
 import { push } from 'connected-react-router';
 import { db } from '../firebase';
 import dayjs from 'dayjs';
-import { Pic, UserHeader, PostMenu } from '../components';
+import { Pic, UserHeader, PostMenu, Button } from '../components';
 import { makeStyles } from '@material-ui/core/styles';
+import Box from '@material-ui/core/Box';
+import Avatar from '@material-ui/core/Avatar';
 
 const useStyles = makeStyles((theme) => ({
+  root: {
+    display: 'flex',
+    alignItems: 'center',
+    marginBottom: 16
+  },
   avatar: {
-    [theme.breakpoints.up('md')]: {
-      width: 80,
-      height: 80,
-      cursor: 'pointer'
-    },
+    width: 60,
+    height: 60,
+  },
+  name: {
+    marginBottom: 8,
+    lineHeight: 1,
+    fontWeight: 'bold',
+  },
+  box: {
+    marginLeft: 16,
   },
   date: {
     fontSize: 10,
@@ -31,6 +44,7 @@ const Post = (props: PostProps) => {
   const [time, setTime] = useState('');
   const classes = useStyles();
   const dispatch = useDispatch();
+  const uid = useSelector((state: RootState) => state.user.uid);
 
   useEffect(() => {
 
@@ -54,12 +68,12 @@ const Post = (props: PostProps) => {
       {postData && (
         <>
           {poster &&
-            <UserHeader
-              uid={poster.uid}
-              src={poster.photoURL}
-              name={poster.displayName}
-              onClick={() => dispatch(push(`/profile/${poster.uid}`))}
-            />
+            <Box className={classes.root} onClick={() => dispatch(push(`/profile/${poster.uid}`))}>
+              <Avatar className={classes.avatar} src={poster.photoURL} />
+              <Box className={classes.box}>
+                <p className={classes.name}>{poster.displayName}</p>
+              </Box>
+            </Box>
           }
           <Pic src={postData.url} />
           <div style={{ marginTop: 8 }}>

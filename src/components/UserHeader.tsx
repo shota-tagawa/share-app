@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React, { useState, useCallback, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { RootState } from '../store';
 import { firebaseUserProfile } from '../interface';
@@ -32,32 +32,48 @@ interface userHeaderProps {
   children?: React.ReactNode,
   src: string,
   name: string,
-  uid: string
+  uid: string,
+  isFollow: boolean,
   onClick?: ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void) | undefined
 }
 
 const UserHeader = (props: userHeaderProps) => {
   const uid = useSelector((state: RootState) => state.user.uid);
-  const { children, src, name, onClick } = props;
+  const { children, src, name, onClick, isFollow } = props;
   const classes = useStyles();
 
   const follow = useCallback(() => {
     (async () => {
-      const userRef = db.collection('users').doc(props.uid);
-      const doc = await userRef.get();
-      const docData = doc.data() as firebaseUserProfile;
-      const follower = docData.follower;
+      const userRef = db.collection('users').doc(uid);
+      const userDoc = await userRef.get();
+      const userDocData = userDoc.data() as firebaseUserProfile;
+      const follow = userDocData.follow;
+      const targetUserRef = db.collection('users').doc(props.uid);
+      const targetDoc = await targetUserRef.get();
+      const targetDocData = targetDoc.data() as firebaseUserProfile;
+      const follower = targetDocData.follower;
+
       if (!follower.includes(uid)) {
-        await userRef.set({
+        await targetUserRef.set({
           follower: [
             ...follower,
             uid
           ]
         }, { merge: true })
-      } else {
-        const newFollower = follower.filter((followerId) => followerId !== uid)
         await userRef.set({
+          follow: [
+            ...follow,
+            props.uid
+          ]
+        }, { merge: true });
+      } else {
+        const newFollower = follower.filter(followerId => followerId !== uid)
+        const newFollow = follow.filter(followId => followId !== props.uid)
+        await targetUserRef.set({
           follower: newFollower
+        }, { merge: true })
+        await userRef.set({
+          follow: newFollow
         }, { merge: true })
       }
     })()
@@ -71,7 +87,7 @@ const UserHeader = (props: userHeaderProps) => {
         {
           (props.uid !== uid) && (
             <Button
-              label="フォローする"
+              label={isFollow ? 'フォローする' : 'フォロー解除'}
               onClick={follow}
             />
           )

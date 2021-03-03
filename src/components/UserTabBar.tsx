@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { firebaseUserProfile, firebasePost } from '../interface';
+import { useDispatch } from 'react-redux';
+import { push } from 'connected-react-router';
 import { db } from '../firebase';
 import { Tab } from './';
 import Box from '@material-ui/core/Box';
@@ -18,20 +20,15 @@ const useStyles = makeStyles({
 
 interface UserTabBarProps {
   uid: string
-  postCount: number
+  postCount: number,
+  followCount: number,
+  followerCount: number,
 }
 
 const UserTabBar = (props: UserTabBarProps) => {
   const classes = useStyles();
-  const { uid, postCount } = props;
-
-  useEffect(() => {
-    const unsubscribe = db.collection('users').doc(uid).onSnapshot(snapshot => {
-      const userData = snapshot.data() as firebaseUserProfile;
-
-    })
-    return () => unsubscribe();
-  }, [uid])
+  const dispatch = useDispatch();
+  const { uid, postCount, followCount, followerCount } = props;
 
   return (
     <Box className={classes.root} mt={2}>
@@ -41,14 +38,16 @@ const UserTabBar = (props: UserTabBarProps) => {
         unit='件'
       />
       <Tab
-        count={0}
+        count={followerCount}
         title='フォロワー'
         unit='人'
+        onClick={() => dispatch(push(`/follower-list/${uid}`))}
       />
       <Tab
-        count={0}
+        count={followCount}
         title='フォロー中'
         unit='人'
+        onClick={() => dispatch(push(`/follow-list/${uid}`))}
       />
     </Box>
   )
