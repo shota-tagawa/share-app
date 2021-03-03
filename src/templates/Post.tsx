@@ -55,6 +55,7 @@ const Post = (props: PostProps) => {
         <>
           {poster &&
             <UserHeader
+              uid={poster.uid}
               src={poster.photoURL}
               name={poster.displayName}
               onClick={() => dispatch(push(`/profile/${poster.uid}`))}

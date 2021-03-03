@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
 
 const Profile = (props: any) => {
   const params = props.match.params;
-  const [userData, setUserData] = useState<any>();
+  const [userData, setUserData] = useState<firebaseUserProfile>();
   const [postDatas, setPostDatas] = useState<any>([]);
   const dispatch = useDispatch();
   const uid = useSelector((state: RootState) => state.user.uid);
@@ -59,6 +59,7 @@ const Profile = (props: any) => {
         {userData && (
           <>
             <UserHeader
+              uid={userData.uid}
               src={userData.photoURL}
               name={userData.displayName}
             >

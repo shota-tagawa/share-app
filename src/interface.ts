@@ -3,12 +3,8 @@ export interface firebaseUserProfile {
   displayName: string,
   photoURL: string,
   selfIntroduction: string,
-  follow: string[
-
-  ],
-  follower: string[
-
-  ]
+  follow: string[],
+  follower: string[]
 }
 
 export interface firebasePost {
