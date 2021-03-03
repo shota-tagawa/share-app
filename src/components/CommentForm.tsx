@@ -61,7 +61,6 @@ const CommentForm = (props: CommentFormProps) => {
       photoURL
     }];
     setComments(newComments);
-
   }
 
   return (

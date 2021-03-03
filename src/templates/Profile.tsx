@@ -8,36 +8,23 @@ import { makeStyles } from '@material-ui/core/styles';
 import { RootState } from '../store';
 import { push } from 'connected-react-router';
 import { db } from '../firebase';
-import { ImageGrid, TabBar } from './../components/';
-
-const useStyles = makeStyles((theme) => ({
-  avatar: {
-    [theme.breakpoints.up('md')]: {
-      width: 80,
-      height: 80
-    },
-  },
-  tabBar: {
-    marginTop: 16,
-    [theme.breakpoints.up('md')]: {
-      marginTop: 32,
-    }
-  },
-}));
+import { ImageGrid, UserTabBar } from './../components/';
 
 const Profile = (props: any) => {
   const params = props.match.params;
-  const [userData, setUserData] = useState<any>();
+  const [userData, setUserData] = useState<firebaseUserProfile>();
   const [postDatas, setPostDatas] = useState<any>([]);
+  const [follow, setFollow] = useState<string[]>([]);
+  const [follower, setFollower] = useState<string[]>([]);
+  const [isFollow, setIsFollow] = useState<boolean>(false);
   const dispatch = useDispatch();
   const uid = useSelector((state: RootState) => state.user.uid);
-  const classes = useStyles();
 
   useEffect(() => {
     (async () => {
       const user = await db.collection('users').doc(params.id).get();
-      const userDataRef = user.data() as firebaseUserProfile;
-      userDataRef && setUserData(userDataRef);
+      const userData = user.data() as firebaseUserProfile;
+      userData && setUserData(userData);
     })();
 
     db.collection('posts')
@@ -51,6 +38,17 @@ const Profile = (props: any) => {
         setPostDatas(newpostDatas);
       })
 
+    const unsubscribe = db.collection('users').doc(params.id).onSnapshot(snapshot => {
+      const snapshotData = snapshot.data() as firebaseUserProfile;
+      setFollow(snapshotData.follow);
+      setFollower(snapshotData.follower);
+      if (!snapshotData.follower.includes(uid)) {
+        setIsFollow(true);
+      } else {
+        setIsFollow(false);
+      }
+    });
+    return () => unsubscribe();
   }, [params])
 
   return (
@@ -59,8 +57,10 @@ const Profile = (props: any) => {
         {userData && (
           <>
             <UserHeader
+              uid={userData.uid}
               src={userData.photoURL}
               name={userData.displayName}
+              isFollow={isFollow}
             >
               {(userData.uid == uid) && (
                 <IconButton
@@ -72,6 +72,12 @@ const Profile = (props: any) => {
               )}
             </UserHeader>
             <p>{userData.selfIntroduction}</p>
+            <UserTabBar
+              uid={props.match.params.id}
+              postCount={postDatas.length}
+              followCount={follow.length}
+              followerCount={follower.length}
+            />
           </>
         )}
       </div>

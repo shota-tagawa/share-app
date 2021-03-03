@@ -10,4 +10,5 @@ export { default as PostMenu } from './PostMenu';
 export { default as Modal } from './Modal';
 export { default as Comment } from './Comment';
 export { default as CommentForm } from './CommentForm';
-export { TabBar } from './TabBar/index';
+export { default as Tab } from './Tab';
+export { default as UserTabBar } from './UserTabBar';

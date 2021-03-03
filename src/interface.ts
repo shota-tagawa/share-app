@@ -2,7 +2,9 @@ export interface firebaseUserProfile {
   uid: string,
   displayName: string,
   photoURL: string,
-  selfIntroduction: string
+  selfIntroduction: string,
+  follow: string[],
+  follower: string[]
 }
 
 export interface firebasePost {

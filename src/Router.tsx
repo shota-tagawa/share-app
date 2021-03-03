@@ -1,7 +1,7 @@
 import React from 'react';
 import { ConnectedRouter } from 'connected-react-router';
 import { Route, Switch } from 'react-router-dom';
-import { Front, Home, SignIn, SignUp, AddPost, Post, ProfileEdit, Profile } from './templates';
+import { Front, Home, SignIn, SignUp, AddPost, Post, ProfileEdit, Profile, FollowList, FollowerList } from './templates';
 import Auth from './Auth';
 import history from './history';
 
@@ -21,6 +21,8 @@ const Router = () => {
           <Route exact path="/home" component={Home} />
           <Route exact path="/addpost" component={AddPost} />
           <Route path="/post/:id" component={Post} />
+          <Route path="/follow-list/:id" component={FollowList} />
+          <Route path="/follower-list/:id" component={FollowerList} />
         </Auth>
       </Switch>
     </ConnectedRouter>
