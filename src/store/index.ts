@@ -5,9 +5,6 @@ import history from '../history'
 
 import userReducer from './user';
 
-// Connected React Routerで共通のインスタンスを使用する
-// 必要があるためエクスポートしておく
-
 const reducer = combineReducers({
   user: userReducer,
   router: connectRouter(history),

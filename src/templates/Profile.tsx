@@ -2,15 +2,23 @@ import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { UserHeader } from '../components';
 import { firebaseUserProfile } from '../interface';
+import { ImageGrid, UserTabBar } from './../components/';
 import EditIcon from '@material-ui/icons/Edit';
 import IconButton from '@material-ui/core/IconButton';
+import Box from '@material-ui/core/Box';
 import { makeStyles } from '@material-ui/core/styles';
 import { RootState } from '../store';
 import { push } from 'connected-react-router';
 import { db } from '../firebase';
-import { ImageGrid, UserTabBar } from './../components/';
+
+const useStyles = makeStyles({
+  root: {
+    marginBottom: 16
+  }
+});
 
 const Profile = (props: any) => {
+  const classes = useStyles();
   const params = props.match.params;
   const [userData, setUserData] = useState<firebaseUserProfile>();
   const [postDatas, setPostDatas] = useState<any>([]);
@@ -30,9 +38,9 @@ const Profile = (props: any) => {
     db.collection('posts')
       .orderBy('timestamp', 'desc')
       .where('poster', '==', params.id).get()
-      .then((snapshot) => {
+      .then((posts) => {
         const newpostDatas: any[] = [];
-        snapshot.forEach((post) => {
+        posts.forEach((post) => {
           newpostDatas.push(post.data());
         })
         setPostDatas(newpostDatas);
@@ -53,7 +61,7 @@ const Profile = (props: any) => {
 
   return (
     <>
-      <div style={{ marginBottom: 16 }}>
+      <Box className={classes.root}>
         {userData && (
           <>
             <UserHeader
@@ -80,7 +88,7 @@ const Profile = (props: any) => {
             />
           </>
         )}
-      </div>
+      </Box>
       <ImageGrid postDatas={postDatas} />
     </>
   )

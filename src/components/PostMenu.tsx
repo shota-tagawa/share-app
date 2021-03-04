@@ -9,12 +9,11 @@ import ChatBubbleOutlineIcon from '@material-ui/icons/ChatBubbleOutline';
 import { makeStyles } from '@material-ui/core/styles';
 import CommentForm from './CommentForm';
 import Comment from './Comment';
-import { firebaseConnect } from 'react-redux-firebase';
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
-    marginBottom: 8,
+    marginBottom: 16,
   },
   like: {
     marginRight: 4,

@@ -1,18 +1,17 @@
 import React, { useState, useEffect } from 'react';
 import { RouteComponentProps } from 'react-router-dom'
-import { useDispatch, useSelector } from 'react-redux';
-import { RootState } from '../store';
+import { useDispatch } from 'react-redux';
 import { firebaseUserProfile, firebasePost } from '../interface';
 import { push } from 'connected-react-router';
 import { db } from '../firebase';
 import dayjs from 'dayjs';
-import { Pic, UserHeader, PostMenu, Button } from '../components';
+import { Pic, PostMenu } from '../components';
 import { makeStyles } from '@material-ui/core/styles';
 import Box from '@material-ui/core/Box';
 import Avatar from '@material-ui/core/Avatar';
 
 const useStyles = makeStyles((theme) => ({
-  root: {
+  userHeader: {
     display: 'flex',
     alignItems: 'center',
     marginBottom: 16
@@ -33,6 +32,9 @@ const useStyles = makeStyles((theme) => ({
     fontSize: 10,
     color: '#aaa',
     marginBottom: 8
+  },
+  info: {
+    marginTop: 8
   }
 }));
 
@@ -44,7 +46,6 @@ const Post = (props: PostProps) => {
   const [time, setTime] = useState('');
   const classes = useStyles();
   const dispatch = useDispatch();
-  const uid = useSelector((state: RootState) => state.user.uid);
 
   useEffect(() => {
 
@@ -68,7 +69,7 @@ const Post = (props: PostProps) => {
       {postData && (
         <>
           {poster &&
-            <Box className={classes.root} onClick={() => dispatch(push(`/profile/${poster.uid}`))}>
+            <Box className={classes.userHeader} onClick={() => dispatch(push(`/profile/${poster.uid}`))}>
               <Avatar className={classes.avatar} src={poster.photoURL} />
               <Box className={classes.box}>
                 <p className={classes.name}>{poster.displayName}</p>
@@ -76,11 +77,11 @@ const Post = (props: PostProps) => {
             </Box>
           }
           <Pic src={postData.url} />
-          <div style={{ marginTop: 8 }}>
+          <Box className={classes.info}>
             <PostMenu id={props.match.params.id} />
             <p className={classes.date}>{time}</p>
             <p>{postData.description}</p>
-          </div>
+          </Box>
         </>
       )}
     </>

@@ -34,12 +34,13 @@ interface userHeaderProps {
   name: string,
   uid: string,
   isFollow: boolean,
+  clickable?: boolean
   onClick?: ((event: React.MouseEvent<HTMLDivElement, MouseEvent>) => void) | undefined
 }
 
 const UserHeader = (props: userHeaderProps) => {
   const uid = useSelector((state: RootState) => state.user.uid);
-  const { children, src, name, onClick, isFollow } = props;
+  const { children, src, name, onClick, isFollow, clickable } = props;
   const classes = useStyles();
 
   const follow = useCallback(() => {
@@ -80,7 +81,13 @@ const UserHeader = (props: userHeaderProps) => {
   }, [])
 
   return (
-    <Box className={classes.root} onClick={onClick}>
+    <Box
+      className={classes.root}
+      onClick={onClick}
+      style={{
+        cursor: clickable ? 'pointer' : 'auto'
+      }}
+    >
       <Avatar className={classes.avatar} src={src} />
       <Box className={classes.box}>
         <p className={classes.name}>{name}</p>

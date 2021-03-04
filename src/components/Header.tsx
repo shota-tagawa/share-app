@@ -2,9 +2,8 @@ import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import ExitIcon from '@material-ui/icons/ExitToApp';
 import { useDispatch, useSelector } from 'react-redux';
 import { authSignOut } from '../store/user';
 import { RootState } from '../store';
@@ -15,7 +14,7 @@ const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
   },
-  menuButton: {
+  signOutButton: {
     marginLeft: 'auto',
   },
   title: {
@@ -23,10 +22,12 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "1rem"
   },
   appBar: {
-    boxShadow: "none"
+    boxShadow: "none",
+    backgroundColor: '#fff',
+    borderBottom: '1px solid #ccc'
   },
   toolBar: {
-    maxWidth: 700,
+    maxWidth: 760,
     width: "100%",
     margin: "0 auto",
     [theme.breakpoints.up('md')]: {
@@ -45,6 +46,15 @@ const Header = () => {
   const dispatch = useDispatch();
   const isSignIn = useSelector((state: RootState) => state.user.isSignIn);
 
+  const signOut = () => {
+    const signOutConfirm = window.confirm('ログアウトしますか？');
+    if (signOutConfirm) {
+      dispatch(authSignOut())
+    } else {
+      return;
+    }
+  }
+
   return (
     <div className={classes.root}>
       <AppBar className={classes.appBar} position="fixed" color='default'>
@@ -52,9 +62,16 @@ const Header = () => {
           <figure className={classes.logo}>
             <img onClick={() => { isSignIn && dispatch(push('/home')) }} src={logo}></img>
           </figure>
-          <IconButton onClick={() => { dispatch(authSignOut()) }} edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
+          {isSignIn && (
+            <IconButton
+              onClick={signOut}
+              edge="start"
+              className={classes.signOutButton}
+              color="inherit"
+            >
+              <ExitIcon />
+            </IconButton>
+          )}
         </Toolbar>
       </AppBar>
     </div>

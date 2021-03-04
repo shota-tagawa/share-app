@@ -1,7 +1,7 @@
-import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { auth, storage, db } from '../firebase';
-import { useDispatch } from 'react-redux';
 import { push } from 'connected-react-router';
+import { firebaseUserProfile } from '../interface';
 
 const initialState = {
   isSignIn: false,
@@ -42,13 +42,13 @@ const slice = createSlice({
 
 export const authSignUp = (email: string, password: string) => {
   return async (dispatch: (action: any) => any) => {
-    const snapshot = await auth.createUserWithEmailAndPassword(email, password)
+    const userData = await auth.createUserWithEmailAndPassword(email, password)
       .catch(() => {
         alert('会員登録に失敗しました。入力内容をご確認ください。')
       })
-    if (snapshot && snapshot.user) {
-      await db.collection('users').doc(snapshot.user.uid).set({
-        uid: snapshot.user.uid,
+    if (userData && userData.user) {
+      await db.collection('users').doc(userData.user.uid).set({
+        uid: userData.user.uid,
         displayName: '',
         selfIntroduction: '',
         photoURL: '',
@@ -56,7 +56,7 @@ export const authSignUp = (email: string, password: string) => {
         follower: [],
       })
       await dispatch(signIn({
-        uid: snapshot.user.uid,
+        uid: userData.user.uid,
       }))
       await dispatch(push('/home'));
     }
@@ -65,14 +65,14 @@ export const authSignUp = (email: string, password: string) => {
 
 export const authSignIn = (email: string, password: string) => {
   return async (dispatch: (action: any) => any) => {
-    const snapshot = await auth.signInWithEmailAndPassword(email, password)
+    const userData = await auth.signInWithEmailAndPassword(email, password)
       .catch(() => {
         alert('ログインに失敗しました。入力内容をご確認ください。')
       })
-    if (snapshot && snapshot.user) {
-      const uid = snapshot.user.uid;
-      const doc = await db.collection('users').doc(snapshot.user.uid).get();
-      const docData = doc.data();
+    if (userData && userData.user) {
+      const uid = userData.user.uid;
+      const doc = await db.collection('users').doc(userData.user.uid).get();
+      const docData = doc.data() as firebaseUserProfile;
       if (!docData) {
         await dispatch(signIn({
           uid,
@@ -107,8 +107,8 @@ export const editProfile = (displayName: string, selfIntroduction: string, photo
       const strLength = 24;
       const id = Array.from(Array(strLength)).map(() => str[Math.floor(Math.random() * str.length)]).join('')
 
-      const snapshot = await storage.ref().child(id).put(photoURL);
-      const url = await snapshot.ref.getDownloadURL();
+      const userData = await storage.ref().child(id).put(photoURL);
+      const url = await userData.ref.getDownloadURL();
       const user = auth.currentUser;
       if (user) {
         //firestore
@@ -120,7 +120,7 @@ export const editProfile = (displayName: string, selfIntroduction: string, photo
 
         //store
         const doc = await db.collection('users').doc(user.uid).get();
-        const docData = doc.data();
+        const docData = doc.data() as firebaseUserProfile;
         if (docData) {
           await dispatch(updateProfile({
             displayName: docData.displayName,
@@ -143,7 +143,7 @@ export const editProfile = (displayName: string, selfIntroduction: string, photo
 
         //redux
         const doc = await db.collection('users').doc(user.uid).get();
-        const docData = doc.data();
+        const docData = doc.data() as firebaseUserProfile;
         if (docData) {
           await dispatch(updateProfile({
             displayName: docData.displayName,
