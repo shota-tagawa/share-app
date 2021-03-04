@@ -31,7 +31,6 @@ const useStyles = makeStyles((theme) => ({
     textShadow: '4px 4px 0 #000',
     color: '#fff',
     fontWeight: 'bold',
-    fontFamily: 'robot',
     marginBottom: 24,
     [theme.breakpoints.up('md')]: {
       fontSize: 70,
