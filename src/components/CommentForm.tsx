@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { RootState } from '../store';
-import TextField from '@material-ui/core/TextField';
-import { makeStyles } from '@material-ui/core/styles';
-import Box from '@material-ui/core/Box';
-import { Button } from './';
 import { db } from '../firebase';
 import { firebasePost, firebasePostComment } from '../interface';
+import { Button } from './';
+import { makeStyles } from '@material-ui/core/styles';
+import TextField from '@material-ui/core/TextField';
+import Box from '@material-ui/core/Box';
 
 const useStyles = makeStyles({
   root: {

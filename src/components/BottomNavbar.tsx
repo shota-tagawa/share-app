@@ -6,7 +6,6 @@ import { makeStyles, Theme } from '@material-ui/core/styles';
 import BottomNavigation from '@material-ui/core/BottomNavigation';
 import BottomNavigationAction from '@material-ui/core/BottomNavigationAction';
 import HomeIcon from '@material-ui/icons/Home';
-import FavoriteIcon from '@material-ui/icons/Favorite';
 import AddIcon from '@material-ui/icons/Add';
 import AccountIcon from '@material-ui/icons/AccountCircle'
 
@@ -18,7 +17,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     left: 0,
     zIndex: 10000,
     height: 45,
-    backgroundColor: '#eee'
+    backgroundColor: '#fff',
+    borderTop: '1px solid #ccc'
   },
 }));
 
@@ -45,7 +45,6 @@ const BottomNavbar = () => {
       <BottomNavigationAction
         onClick={() => dispatch(push('/addpost'))} icon={<AddIcon />}
       />
-      <BottomNavigationAction icon={<FavoriteIcon />} />
       <BottomNavigationAction
         onClick={() => dispatch(push(`/profile/${uid}`))} icon={<AccountIcon />}
       />

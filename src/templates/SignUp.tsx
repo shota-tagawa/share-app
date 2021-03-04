@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import TextField from '@material-ui/core/TextField';
-import Button from '@material-ui/core/Button';
-import { auth } from '../firebase';
-import styles from '../assets/common.module.scss';
-import { authSignUp } from '../store/user';
+import { Button, TextField } from '../components';
+import Box from '@material-ui/core/Box';
+import { authSignUp, authSignIn } from '../store/user';
 import { useDispatch } from 'react-redux';
 
 const SignUp = () => {
@@ -21,17 +19,34 @@ const SignUp = () => {
 
   return (
     <>
-      <div className={styles.formWrapper}>
-        <h2 className={styles.formTitle}>未登録の方</h2>
-        <div className={styles.formItem}>
-          <TextField className={styles.textField} label="email" value={email} onChange={(e) => inputEmail(e as React.ChangeEvent<HTMLInputElement>)} />
-        </div>
-        <div className={styles.formItem}>
-          <TextField className={styles.textField} label="password" type="password" value={password} onChange={(e) => inputPassword(e as React.ChangeEvent<HTMLInputElement>)} />
-        </div>
-        <div className={styles.formItem}>
-          <Button variant="contained" color="primary" onClick={() => { dispatch(authSignUp(email, password)) }} >新規登録</Button>
-        </div>
+      <div className=''>
+        <h2 className='heading'>未登録の方</h2>
+        <TextField
+          fullWidth={true}
+          label="email"
+          value={email}
+          onChange={(e) => inputEmail(e as React.ChangeEvent<HTMLInputElement>)}
+          mb={2}
+        />
+        <TextField
+          mb={2}
+          fullWidth={true}
+          label="password"
+          type="password"
+          value={password}
+          onChange={(e) => inputPassword(e as React.ChangeEvent<HTMLInputElement>)}
+        />
+        <Button
+          onClick={() => { dispatch(authSignUp(email, password)) }}
+          label='新規登録'
+        />
+        <Box style={{ marginTop: 24 }}>
+          <h2 className="heading">または</h2>
+          <Button
+            onClick={() => { dispatch(authSignIn('test@test.com', 'testtest')) }}
+            label='ゲストログイン'
+          />
+        </Box>
       </div>
     </>
   )

@@ -1,21 +1,20 @@
 import React, { useState, useEffect } from 'react';
+import { firebasePost } from '../interface';
 import { ImageGrid } from './../components/';
 import { db } from '../firebase';
 
-
-
 const Home = () => {
-  const [postDatas, setPostDatas] = useState<any>([]);
+  const [postDatas, setPostDatas] = useState<firebasePost[]>([]);
 
   useEffect(() => {
-    db.collection('posts').orderBy('timestamp', 'desc').get()
-      .then((snapshot) => {
-        const newpostDatas: any[] = [];
-        snapshot.forEach((post) => {
-          newpostDatas.push(post.data());
-        })
-        setPostDatas(newpostDatas);
+    (async () => {
+      const posts = await db.collection('posts').orderBy('timestamp', 'desc').get();
+      const newpostDatas: firebasePost[] = [];
+      posts.forEach((post) => {
+        newpostDatas.push(post.data() as firebasePost);
       })
+      setPostDatas(newpostDatas);
+    })();
   }, [])
 
   return (

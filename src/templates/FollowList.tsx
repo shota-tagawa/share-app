@@ -7,7 +7,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Avatar from '@material-ui/core/Avatar';
 import Box from '@material-ui/core/Box';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles({
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -27,7 +27,7 @@ const useStyles = makeStyles((theme) => ({
   box: {
     marginLeft: 16,
   },
-}));
+});
 
 interface followProfile {
   uid: string,
@@ -40,6 +40,7 @@ const FollowList = (props: any) => {
   const params = props.match.params;
   const [followList, setFollowList] = useState<[followProfile?]>();
   const dispatch = useDispatch();
+  
   useEffect(() => {
     (async () => {
       //urlのidからuid > followを取得する

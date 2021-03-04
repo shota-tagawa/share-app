@@ -22,15 +22,19 @@ interface TabProps {
   count: number,
   title: string,
   unit: string,
+  clickable?: boolean
 }
 
 const Tab = (props: TabProps) => {
-  const { count, title, unit, onClick } = props;
+  const { count, title, unit, onClick,clickable } = props;
   const classes = useStyles();
   return (
     <Box
       onClick={onClick}
       className={classes.root}
+      style={{
+        cursor: clickable ? 'pointer' : 'auto'
+      }}
     >
       {title}
       <span className={classes.count}>{count}</span>

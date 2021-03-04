@@ -42,12 +42,14 @@ const UserTabBar = (props: UserTabBarProps) => {
         title='フォロワー'
         unit='人'
         onClick={() => dispatch(push(`/follower-list/${uid}`))}
+        clickable={true}
       />
       <Tab
         count={followCount}
         title='フォロー中'
         unit='人'
         onClick={() => dispatch(push(`/follow-list/${uid}`))}
+        clickable={true}
       />
     </Box>
   )

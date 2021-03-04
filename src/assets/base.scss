@@ -1,3 +1,6 @@
+@import "./mixin";
+@import "./function";
+
 body {
   font-family: "Noto Sans JP", sans-serif;
   font-size: 14px;
@@ -7,4 +10,30 @@ img {
   width: 100%;
   height: auto;
   backface-visibility: hidden;
+}
+
+.heading {
+  font-size: 18px;
+  font-weight: bold;
+  margin-bottom: 16px;
+  position: relative;
+  padding-left: 32px;
+  @include media(md) {
+    font-size: 24px;
+    padding-left: 48px;
+  }
+  &::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 0;
+    transform: translateY(-50%);
+    width: 18px;
+    height: 2px;
+    background-color: #aaa;
+    @include media(md){
+      width: 28px;
+      height: 3px;
+    }
+  }
 }

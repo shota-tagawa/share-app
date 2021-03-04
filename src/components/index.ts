@@ -12,3 +12,4 @@ export { default as Comment } from './Comment';
 export { default as CommentForm } from './CommentForm';
 export { default as Tab } from './Tab';
 export { default as UserTabBar } from './UserTabBar';
+export { default as TextField } from './TextField';

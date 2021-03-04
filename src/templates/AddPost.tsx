@@ -3,11 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import { push } from 'connected-react-router';
 import { db, storage } from '../firebase';
 import { RootState } from '../store';
-import styles from '../assets/common.module.scss';
-import { UploadButton, Button, Pic } from '../components';
-import TextField from '@material-ui/core/TextField';
-import AddPhoteIcon from '@material-ui/icons/AddAPhoto';
-import IconButton from '@material-ui/core/IconButton';
+import { UploadButton, Button, Pic, TextField } from '../components';
+import Box from '@material-ui/core/Box';
 
 const AddPost = () => {
   const dispatch = useDispatch();
@@ -41,9 +38,8 @@ const AddPost = () => {
     const id = Array.from(Array(strLength)).map(() => str[Math.floor(Math.random() * str.length)]).join('');
     const timestamp = Date.now() / 1000;
 
-
-    const snapshot = await storage.ref().child(id).put(image);
-    const url = await snapshot.ref.getDownloadURL();
+    const imageRef = await storage.ref().child(id).put(image);
+    const url = await imageRef.ref.getDownloadURL();
     await db.collection('posts').doc(id).set({
       id,
       url,
@@ -54,38 +50,36 @@ const AddPost = () => {
       comments: []
     }).catch(() => {
       alert('画像のアップロードに失敗しました。')
-    }).finally(()=>{
+    }).finally(() => {
       setSending(false)
     })
     dispatch(push('/home'));
   }
 
-
   return (
     <>
-      <h2 className={styles.heading}>新規投稿</h2>
-      <div>
+      <h2 className='heading'>新規投稿</h2>
+      <Box>
         {image && (
           <Pic src={thumbnail} />
         )}
-        <div className={styles.formItem}>
+        <Box mb={1}>
           <UploadButton onChange={(e) => inputImage(e)} />
-        </div>
-        <div className={styles.formItem}>
-          <TextField
-            value={description}
-            onChange={(e) => { inputDescription(e as React.ChangeEvent<HTMLInputElement>); }}
-            label="説明"
-            multiline={true}
-            rows={4}
-            fullWidth={true}
-          />
-        </div>
+        </Box>
+        <TextField
+          value={description}
+          onChange={(e) => { inputDescription(e as React.ChangeEvent<HTMLInputElement>); }}
+          label="説明"
+          multiline={true}
+          rows={4}
+          fullWidth={true}
+          mb={3}
+        />
         <Button
           onClick={upload}
           label="投稿する"
         />
-      </div>
+      </Box>
     </>
   );
 }

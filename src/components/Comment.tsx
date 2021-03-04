@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 import { push } from 'connected-react-router';
 import { makeStyles } from '@material-ui/core/styles';
@@ -12,10 +12,6 @@ const useStyles = makeStyles((theme) => ({
   },
   avatar: {
     cursor: 'pointer'
-    // [theme.breakpoints.up('md')]: {
-    //   width: 60,
-    //   height: 60
-    // },
   },
   body: {
     marginLeft: 16,
