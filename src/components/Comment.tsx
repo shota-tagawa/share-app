@@ -39,7 +39,7 @@ const Comment = (props: CommentProps) => {
 
   return (
     <Box className={classes.root} mb={1}>
-      <Avatar className={classes.avatar} src={src} onClick={() => dispatch(push(`profile/${uid}`))} />
+      <Avatar className={classes.avatar} src={src} onClick={() => dispatch(push(`/profile/${uid}`))} />
       <Box className={classes.body}>
         <p className={classes.name}>{displayName}</p>
         <p>{content}</p>
