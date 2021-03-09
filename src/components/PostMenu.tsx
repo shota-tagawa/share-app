@@ -110,8 +110,6 @@ const PostMenu = (props: PostMenuProps) => {
         setOpen={setOpen}
       >
         <Box className={classes.commentWrapper}>
-          {comments[0] && comments[0].content}
-
           {comments && comments.map((comment, index) => (
             <Comment
               key={index}
