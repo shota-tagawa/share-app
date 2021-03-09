@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useReducer } from 'react';
 import { useDispatch } from 'react-redux';
 import { push } from 'connected-react-router';
 import { db } from './../firebase';
@@ -38,19 +38,16 @@ interface followProfile {
 const FollowList = (props: any) => {
   const classes = useStyles();
   const params = props.match.params;
-  const [followList, setFollowList] = useState<[followProfile?]>();
+  const [followList, setFollowList] = useState<followProfile[]>([]);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     (async () => {
-      //urlのidからuid > followを取得する
+      const newFollowList: followProfile[] = [];
       const user = await db.collection('users').doc(params.id).get();
       const userData = user.data() as firebaseUserProfile;
-      const follow = userData.follow;
 
-      //followのリストを作成する
-      const newFollowList: [followProfile?] = [];
-      follow.forEach(async (followId) => {
+      userData.follow.forEach(async (followId) => {
         const followUser = await db.collection('users').doc(followId).get();
         const followUserData = followUser.data() as firebaseUserProfile;
         newFollowList.push({
@@ -58,31 +55,28 @@ const FollowList = (props: any) => {
           uid: followUserData.uid,
           photoURL: followUserData.photoURL
         })
-        setFollowList(newFollowList);
+        setFollowList([...newFollowList])
       })
     })();
   }, []);
 
+
   return (
     <ul>
-      {followList && followList.map((follow, key) => (
-        <li
-          key={key}
-        >
-          {follow && (
-            <Box
-              onClick={() => dispatch(push(`/profile/${follow.uid}`))}
-              className={classes.root}
-            >
-              <Avatar
-                className={classes.avatar}
-                src={follow.photoURL}
-              />
-              <Box className={classes.box}>
-                <p className={classes.name}>{follow.displayName}</p>
-              </Box>
+      {followList && followList.map((follow, index) => (
+        <li key={index}>
+          <Box
+            onClick={() => dispatch(push(`/profile/${follow.uid}`))}
+            className={classes.root}
+          >
+            <Avatar
+              className={classes.avatar}
+              src={follow.photoURL}
+            />
+            <Box className={classes.box}>
+              <p className={classes.name}>{follow.displayName}</p>
             </Box>
-          )}
+          </Box>
         </li>
       ))}
     </ul>
