@@ -38,19 +38,15 @@ interface followerProfile {
 const FollowerList = (props: any) => {
   const classes = useStyles();
   const params = props.match.params;
-  const [followerList, setFollowerList] = useState<[followerProfile?]>();
+  const [followerList, setFollowerList] = useState<followerProfile[]>([]);
   const dispatch = useDispatch();
-  
+
   useEffect(() => {
     (async () => {
-      //urlのidからuid > followを取得する
+      const newFollowerList: followerProfile[] = [];
       const user = await db.collection('users').doc(params.id).get();
       const userData = user.data() as firebaseUserProfile;
-      const follower = userData.follower;
-
-      //followのリストを作成する
-      const newFollowerList: [followerProfile?] = [];
-      follower.forEach(async (followerId) => {
+      userData.follower.forEach(async (followerId) => {
         const followerUser = await db.collection('users').doc(followerId).get();
         const followerUserData = followerUser.data() as firebaseUserProfile;
         newFollowerList.push({
@@ -58,7 +54,7 @@ const FollowerList = (props: any) => {
           uid: followerUserData.uid,
           photoURL: followerUserData.photoURL
         })
-        setFollowerList(newFollowerList);
+        setFollowerList([...newFollowerList]);
       })
     })();
   }, []);
